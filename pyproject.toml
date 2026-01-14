@@ -1,0 +1,6 @@
+[project]
+name = "javarush-django-project"
+version = "0.1.0"
+description = "Python University Module 3 - Django Final Project"
+requires-python = ">=3.12"
+dependencies = []
