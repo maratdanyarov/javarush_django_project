@@ -1,34 +1,25 @@
 FROM python:3.12-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    postgresql-client \
-    gcc \
-    python3-dev \
-    musl-dev \
-    libpq-dev \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
-# Install UV and add to PATH
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="/root/.local/bin:$PATH"
-
+# Set working directory
 WORKDIR /app
 
-# Copy dependency files
+# Copy dependency files first (for better caching)
 COPY pyproject.toml uv.lock ./
 
-# Install dependencies (creates .venv by default)
-RUN uv sync --frozen --no-dev
+# Install dependencies into system Python (no venv needed in container)
+RUN uv sync --frozen --no-dev --no-install-project
 
-# Copy application code
+# Copy the rest of the application
 COPY . .
 
-# Collect static files using uv run
-RUN uv run python manage.py collectstatic --noinput
+# Install the project itself
+RUN uv sync --frozen --no-dev
 
+# Expose port
 EXPOSE 8000
 
-# Run server using uv run
+# Default command (can be overridden by docker-compose)
 CMD ["uv", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
