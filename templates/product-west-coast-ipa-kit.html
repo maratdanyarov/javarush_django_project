@@ -1,6 +1,8 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>West Coast IPA - All-Grain Kit | Hop & Barley</title>
@@ -12,35 +14,35 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Main CSS -->
-  <link rel="stylesheet" href="../static/css/main.css">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
 <body>
 <!-- Header -->
 <header>
   <div class="header-container">
-    <a href="home.html" class="header__logo">
-      <img src="../static/img/logo.svg" alt="Hop & Barley Logo">
+    <a href="{% url 'home' %}" class="header__logo">
+      <img src="{% static 'img/logo.jpg' %}" alt="Hop & Barley Logo">
       <p class="logo-text">Hop & Barley</p>
     </a>
     <nav class="header__nav">
       <ul>
-        <li><a href="home.html">Products</a></li>
-        <li><a href="guides-recipes.html">Guides & Recipes</a></li>
+        <li><a href="{% url 'home' %}">Products</a></li>
+        <li><a href="{% url 'guides_recipes' %}">Guides & Recipes</a></li>
         <li><a href="#">Community</a></li>
         <li><a href="#">Resources</a></li>
         <li><a href="#">Contact</a></li>
       </ul>
     </nav>
     <div class="header__auth-buttons" id="auth-guest">
-      <a href="login.html" class="button button--secondary">Sign in</a>
-      <a href="register.html" class="button button--primary">Register</a>
+      <a href="{% url 'users:login' %}" class="button button--secondary">Sign in</a>
+      <a href="{% url 'users:register' %}" class="button button--primary">Register</a>
     </div>
     <div class="header__user-actions" id="auth-user">
-      <a href="account.html" class="user-icon" aria-label="My Account">
-        <img src="../static/img/icons/User_alt.svg" alt="User Account">
+      <a href="{% url 'users:login' %}" class="user-icon" aria-label="My Account">
+        <img src="{% static 'img/icons/User_alt.jpg' %}">
       </a>
-      <a href="cart.html" class="cart-icon" aria-label="Shopping Cart">
-        <img src="../static/img/icons/Shopping_bag.svg" alt="Shopping Cart">
+      <a href="{% url 'orders:cart' %}" class="cart-icon" aria-label="Shopping Cart">
+        <img src="{% static 'img/icons/Shopping_bag.jpg' %}">
       </a>
 
     </div>
@@ -129,7 +131,7 @@
             <p class="review-text">This kit is the bomb! The beer turned out exactly how I love it: bitter, aromatic, with a powerful pine-citrus profile. The instructions are very clear. Will definitely buy again.</p>
           </div>
           <div class="review-author">
-            <img src="../static/img/avatars/avatar9.svg" alt="User avatar" class="author-avatar">
+            <img src="../static/img/avatars/avatar9.jpg" alt="User avatar" class="author-avatar">
             <span class="author-name">IPA_Lover_82</span>
           </div>
         </div>
@@ -143,7 +145,7 @@
             <p class="review-text">Excellent value for money. All ingredients are fresh, the malt is well-milled, and the hops are aromatic. Ended up with 5 gallons of excellent IPA. Much easier than sourcing everything separately.</p>
           </div>
           <div class="review-author">
-            <img src="../static/img/avatars/avatar10.svg" alt="User avatar" class="author-avatar">
+            <img src="../static/img/avatars/avatar10.jpg" alt="User avatar" class="author-avatar">
             <span class="author-name">FrugalBrewer</span>
           </div>
         </div>
@@ -157,7 +159,7 @@
             <p class="review-text">The kit is super, but be prepared for the bitterness! This is a real West Coast IPA, not a modern "smoothie". If you love the classics, you'll enjoy it. I might reduce the 60-minute hop addition slightly, but that's a matter of taste.</p>
           </div>
           <div class="review-author">
-            <img src="../static/img/avatars/avatar1.svg" alt="User avatar" class="author-avatar">
+            <img src="% static/img/avatars/avatar1.jpg" alt="User avatar" class="author-avatar">
             <span class="author-name">SweetToothHomebrew</span>
           </div>
         </div>
@@ -168,7 +170,7 @@
 
 <!-- Footer -->
 <footer>
-  <img src="../static/img/background/image-footer.svg" alt="Hop & Barley Hops Logo" class="footer__hops-logo">
+  <img src="{% static 'img/background/image-footer.jpg' %}">
   <nav class="footer__nav">
     <ul>
       <li><a href="#">Contact</a></li>
@@ -182,6 +184,6 @@
 </footer>
 
 <!-- JS -->
-<script src="../static/js/main.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>

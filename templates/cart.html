@@ -1,137 +1,316 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shopping Cart | Hop & Barley</title>
+{% extends 'base.html' %}
+{% load static %}
 
-  <!-- Google Fonts & Font Awesome -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% block title %}Shopping Cart - Hop & Barley{% endblock %}
 
-  <!-- Main CSS -->
-  <link rel="stylesheet" href="../static/css/main.css">
-</head>
-<body>
-<!-- Header -->
-<header>
-  <div class="header-container">
-    <a href="home.html" class="header__logo">
-      <img src="../static/img/logo.svg" alt="Hop & Barley Logo">
-      <p class="logo-text">Hop & Barley</p>
-    </a>
-    <nav class="header__nav">
-      <ul>
-        <li><a href="home.html">Products</a></li>
-        <li><a href="guides-recipes.html">Guides & Recipes</a></li>
-        <li><a href="#">Community</a></li>
-        <li><a href="#">Resources</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </nav>
-    <div class="header__auth-buttons" id="auth-guest">
-      <a href="login.html" class="button button--secondary">Sign in</a>
-      <a href="register.html" class="button button--primary">Register</a>
-    </div>
-    <div class="header__user-actions" id="auth-user">
-      <a href="account.html" class="user-icon" aria-label="My Account">
-        <img src="../static/img/icons/User_alt.svg" alt="User Account">
-      </a>
-      <a href="cart.html" class="cart-icon" aria-label="Shopping Cart">
-        <img src="../static/img/icons/Shopping_bag.svg" alt="Shopping Cart">
-      </a>
-
-    </div>
-  </div>
-</header>
-
+{% block content %}
 <!-- Main Content -->
 <main class="cart-page-wrapper">
   <div class="cart-container">
     <h1 class="cart-title">Shopping Cart</h1>
 
-    <div class="cart-items-list" id="cart-items-list">
-      <!-- Cart Item 1 -->
-      <div class="cart-item" data-price="5.99">
-        <img src="../static/img/products/citra_hops.jpg" alt="Citra Hops" class="cart-item__image">
-        <div class="cart-item__body">
-          <div class="cart-item__details">
-            <h2 class="cart-item__name">Citra Hops</h2>
-            <div class="cart-item__price-info">
-              <p class="cart-item__price" data-item-total-price>
-                $29.95
-              </p>
-              <span class="cart-item__price-tag">per 100g</span>
-            </div>
+    <!-- Сообщения Django -->
+    {% if messages %}
+      <div class="messages-container">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+            {{ message }}
           </div>
-          <div class="cart-item__actions">
-            <div class="cart-item__quantity-selector">
-              <button class="quantity-btn-cart" data-action="decrease"><i class="fa-solid fa-minus"></i></button>
-              <span class="quantity-value-cart">5</span>
-              <button class="quantity-btn-cart" data-action="increase"><i class="fa-solid fa-plus"></i></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if cart_items %}
+      <div class="cart-items-list" id="cart-items-list">
+        {% for item in cart_items %}
+        <!-- Cart Item -->
+        <div class="cart-item" data-price="{{ item.price }}" data-product-id="{{ item.product.id }}">
+          {% if item.product.image %}
+            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="cart-item__image">
+          {% else %}
+            <img src="{% static 'img/products/placeholder.jpg' %}" alt="{{ item.product.name }}" class="cart-item__image">
+          {% endif %}
+
+          <div class="cart-item__body">
+            <div class="cart-item__details">
+              <h2 class="cart-item__name">{{ item.product.name }}</h2>
+              <div class="cart-item__price-info">
+                <p class="cart-item__price" data-item-total-price>
+                  ${{ item.total_price }}
+                </p>
+                <span class="cart-item__price-tag">${{ item.price }} each</span>
+              </div>
+              <small class="stock-info">Available: {{ item.product.stock }}</small>
             </div>
-            <button class="button--remove" data-action="remove">
-              Remove <i class="fa-solid fa-xmark"></i>
-            </button>
+
+            <div class="cart-item__actions">
+              <div class="cart-item__quantity-selector">
+                <button class="quantity-btn-cart" data-action="decrease" data-product-id="{{ item.product.id }}">
+                  <i class="fa-solid fa-minus"></i>
+                </button>
+                <span class="quantity-value-cart">{{ item.quantity }}</span>
+                <button class="quantity-btn-cart" data-action="increase" data-product-id="{{ item.product.id }}" data-max-stock="{{ item.product.stock }}">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+              <button class="button--remove" data-action="remove" data-product-id="{{ item.product.id }}">
+                Remove <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
           </div>
         </div>
+        {% endfor %}
       </div>
 
-      <!-- Cart Item 2 -->
-      <div class="cart-item" data-price="3.00">
-        <img src="../static/img/products/caramel_malt.jpg" alt="Caramel Malt 60L" class="cart-item__image">
-        <div class="cart-item__body">
-          <div class="cart-item__details">
-            <h2 class="cart-item__name">Caramel Malt 60L</h2>
-            <div class="cart-item__price-info">
-              <p class="cart-item__price" data-item-total-price>
-                $3.00
-              </p>
-              <span class="cart-item__price-tag">per 1 lb</span>
-            </div>
-          </div>
-          <div class="cart-item__actions">
-            <div class="cart-item__quantity-selector">
-              <button class="quantity-btn-cart" data-action="decrease"><i class="fa-solid fa-minus"></i></button>
-              <span class="quantity-value-cart">1</span>
-              <button class="quantity-btn-cart" data-action="increase"><i class="fa-solid fa-plus"></i></button>
-            </div>
-            <button class="button--remove" data-action="remove">
-              Remove <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
+      <div class="cart-summary">
+        <div class="cart-summary__total">
+          <p>Total</p>
+          <p id="cart-total-price">${{ total_price }}</p>
         </div>
+<a href="{% url 'orders:checkout' %}" class="button button--primary button--checkout">Proceed to Checkout</a>
       </div>
-    </div>
-
-    <div class="cart-summary">
-      <div class="cart-summary__total">
-        <p>Total</p>
-        <p id="cart-total-price">$32.95</p>
+    {% else %}
+      <!-- Пустая корзина -->
+      <div class="cart-empty">
+        <i class="fa-solid fa-cart-shopping" style="font-size: 4rem; color: #d1d5db; margin-bottom: 1rem;"></i>
+        <h2>Your cart is empty</h2>
+        <p>Start shopping to add items to your cart</p>
+        <a href="{% url 'home' %}" class="button button--primary">
+          Browse Products
+        </a>
       </div>
-      <a href="checkout.html" class="button button--primary button--checkout">Proceed to Checkout</a>
-    </div>
+    {% endif %}
   </div>
 </main>
 
-<!-- Footer -->
-<footer>
-  <img src="../static/img/background/image-footer.svg" alt="Hop & Barley Hops Logo" class="footer__hops-logo">
-  <nav class="footer__nav">
-    <ul>
-      <li><a href="#">Contact</a></li>
-      <li><a href="#">FAQ</a></li>
-      <li><a href="#">Community</a></li>
-      <li><a href="#">Resources</a></li>
-      <li><a href="#">License</a></li>
-    </ul>
-  </nav>
-  <p class="footer__copyright">© Hop & Barley 2025. All rights reserved</p>
-</footer>
+<!-- JS для корзины -->
+<script src="{% static 'js/cart.js' %}"></script>
 
-<!-- JS -->
-<script src="../static/js/main.js"></script>
-</body>
-</html>
+<style>
+/* Стили для сообщений */
+.messages-container {
+  margin-bottom: 1rem;
+}
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Базовые стили корзины */
+.cart-page-wrapper {
+  min-height: calc(100vh - 140px);
+  padding: 40px 24px;
+}
+
+.cart-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cart-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.cart-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.cart-item {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.cart-item__image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.cart-item__body {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cart-item__details {
+  flex: 1;
+}
+
+.cart-item__name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.cart-item__price-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cart-item__price {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.cart-item__price-tag {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.stock-info {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.cart-item__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.cart-item__quantity-selector {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 6px 12px;
+}
+
+.quantity-btn-cart {
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  color: #374151;
+  transition: all 0.2s;
+}
+
+.quantity-btn-cart:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.quantity-value-cart {
+  font-weight: 600;
+  min-width: 24px;
+  text-align: center;
+}
+
+.button--remove {
+  background: none;
+  border: none;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.button--remove:hover {
+  background: #fee2e2;
+}
+
+.cart-summary {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.cart-summary__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.button--checkout {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  display: block;
+}
+
+.cart-empty {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 12px;
+}
+
+.cart-empty h2 {
+  margin-bottom: 12px;
+}
+
+.cart-empty p {
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .cart-item {
+    flex-direction: column;
+  }
+
+  .cart-item__body {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .cart-item__actions {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+</style>
+{% endblock %}

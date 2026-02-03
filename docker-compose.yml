@@ -19,11 +19,13 @@ services:
   web:
     build: .
     container_name: hopbarley_web
+    env_file: .env
     command: >
       sh -c "uv run python manage.py migrate &&
              uv run python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
+      - app_venv:/app/.venv
     ports:
       - "8000:8000"
     depends_on:
@@ -38,3 +40,4 @@ services:
 
 volumes:
   postgres_data:
+  app_venv:

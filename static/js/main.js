@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- General logic for all pages (Login/Logout Simulation) ---
     const loginForm = document.getElementById('login-form');
     const logoutButton = document.getElementById('logout-button');
+
     function checkLoginStatus() {
         if (localStorage.getItem('isLoggedIn') === 'true') {
             document.body.classList.add('user-logged-in');
@@ -10,21 +11,24 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.classList.remove('user-logged-in');
         }
     }
+
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
             localStorage.setItem('isLoggedIn', 'true');
             const nextUrl = new URLSearchParams(window.location.search).get('next');
-            window.location.href = nextUrl || 'home.html';
+            window.location.href = nextUrl || '/';
         });
     }
+
     if (logoutButton) {
         logoutButton.addEventListener('click', function(e) {
             e.preventDefault();
             localStorage.removeItem('isLoggedIn');
-            window.location.href = 'home.html';
+            window.location.href = '/';
         });
     }
+
     checkLoginStatus();
 
 
@@ -58,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const checkboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]');
 
         if (keywordsList && checkboxes.length > 0) {
-
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     const keyword = this.dataset.keyword;
@@ -104,37 +107,65 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.closest('.accordion-item').classList.toggle('active');
             });
         }
+
         // "Add to Cart" Button and Counter
+        // ПРИМЕЧАНИЕ: Эта логика теперь управляется через cart.js и Django
+        // Оставляем только базовую визуальную логику, если нужна
         const cartControls = document.querySelector('.cart-controls');
         if (cartControls) {
             const addToCartBtn = cartControls.querySelector('#add-to-cart-btn');
             const quantityCounter = cartControls.querySelector('#quantity-counter');
-            const decreaseBtn = quantityCounter.querySelector('[data-action="decrease"]');
-            const increaseBtn = quantityCounter.querySelector('[data-action="increase"]');
-            const quantityValueSpan = quantityCounter.querySelector('.quantity-value');
-            let quantity = 0;
-            function updateView() {
-                if (quantity === 0) {
-                    addToCartBtn.classList.remove('is-hidden');
-                    quantityCounter.classList.add('is-hidden');
-                } else {
-                    addToCartBtn.classList.add('is-hidden');
-                    quantityCounter.classList.remove('is-hidden');
-                    quantityValueSpan.textContent = `${quantity} in cart`;
+
+            if (addToCartBtn && quantityCounter) {
+                const decreaseBtn = quantityCounter.querySelector('[data-action="decrease"]');
+                const increaseBtn = quantityCounter.querySelector('[data-action="increase"]');
+                const quantityValueSpan = quantityCounter.querySelector('.quantity-value');
+                let quantity = 0;
+
+                function updateView() {
+                    if (quantity === 0) {
+                        addToCartBtn.classList.remove('is-hidden');
+                        quantityCounter.classList.add('is-hidden');
+                    } else {
+                        addToCartBtn.classList.add('is-hidden');
+                        quantityCounter.classList.remove('is-hidden');
+                        quantityValueSpan.textContent = `${quantity} in cart`;
+                    }
                 }
+
+                addToCartBtn.addEventListener('click', function() {
+                    quantity = 1;
+                    updateView();
+                });
+
+                decreaseBtn.addEventListener('click', function() {
+                    if (quantity > 0) {
+                        quantity--;
+                        updateView();
+                    }
+                });
+
+                increaseBtn.addEventListener('click', function() {
+                    quantity++;
+                    updateView();
+                });
+
+                updateView();
             }
-            addToCartBtn.addEventListener('click', function() { quantity = 1; updateView(); });
-            decreaseBtn.addEventListener('click', function() { if (quantity > 0) { quantity--; updateView(); } });
-            increaseBtn.addEventListener('click', function() { quantity++; updateView(); });
-            updateView();
         }
     }
 
-    // --- Logic for Cart Page (cart.html) ---
+    // --- СТАРАЯ ЛОГИКА КОРЗИНЫ УДАЛЕНА ---
+    // Теперь корзина управляется через cart.js и Django backend
+    // Закомментированный код ниже для справки:
+
+    /*
+    // --- OLD Logic for Cart Page (cart.html) ---
     const cartPageContent = document.querySelector('.cart-page-wrapper');
     if (cartPageContent) {
         const cartItemsList = document.getElementById('cart-items-list');
         const cartTotalPriceElem = document.getElementById('cart-total-price');
+
         function updateCartTotal() {
             let total = 0;
             document.querySelectorAll('.cart-item').forEach(item => {
@@ -145,6 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             if (cartTotalPriceElem) cartTotalPriceElem.textContent = `$${total.toFixed(2)}`;
         }
+
         if (cartItemsList) {
             cartItemsList.addEventListener('click', function(event) {
                 const cartItem = event.target.closest('.cart-item');
@@ -153,22 +185,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 const itemTotalElem = cartItem.querySelector('[data-item-total-price]');
                 const basePrice = parseFloat(cartItem.dataset.price);
                 let quantity = parseInt(quantityElem.textContent);
+
                 if (event.target.closest('[data-action="increase"]')) {
                     quantity++;
                 } else if (event.target.closest('[data-action="decrease"]')) {
                     quantity = quantity > 1 ? quantity - 1 : 0;
                 }
+
                 if (event.target.closest('[data-action="remove"]') || quantity === 0) {
                     cartItem.remove();
                 } else {
                     quantityElem.textContent = quantity;
                     itemTotalElem.textContent = `$${(basePrice * quantity).toFixed(2)}`;
                 }
+
                 updateCartTotal();
             });
         }
+
         updateCartTotal();
     }
+    */
 
     // --- Logic for Account and Admin Pages ---
     const accountAdminWrapper = document.querySelector('.account-page-wrapper, .admin-page-wrapper');
@@ -176,6 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Account Page Tabs
         const accountTabs = document.querySelectorAll('.account-tab');
         const tabPanes = document.querySelectorAll('.tab-pane');
+
         if (accountTabs.length > 0 && tabPanes.length > 0) {
             accountTabs.forEach(tab => {
                 tab.addEventListener('click', function() {

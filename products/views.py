@@ -1,5 +1,8 @@
-from django.views.generic import TemplateView, ListView, DetailView
-from .models import Product, Category
+from django.views.generic import DetailView, ListView, TemplateView
+from rest_framework import viewsets
+
+from .models import Category, Product
+from .serializers import ProductSerializer
 
 
 class HomeView(TemplateView):
@@ -25,14 +28,16 @@ class ProductListView(ListView):
 
 class ProductDetailView(DetailView):
     model = Product
-    template_name = 'products.html'
-    slug_field = 'slug'
+    template_name = 'product_detail.html'
     context_object_name = 'product'
-
-    def get_template_names(self):
-        # Для динамического шаблона по slug (если шаблоны названы как product-<name>.html)
-        return [f'product-{self.object.slug}.html']
 
 
 class GuidesRecipesView(TemplateView):
     template_name = 'guides-recipes.html'
+
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.filter(is_active=True)
+    serializer_class = ProductSerializer
+    filterset_fields = ['category', 'price']
+    search_fields = ['name', 'description']
