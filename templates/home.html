@@ -1,12 +1,12 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Каталог товаров | Hop & Barley{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block title %}Каталог товаров |
+Hop & Barley{% endblock %} {% block content %}
 <main>
     <section class="hero-banner">
-        <img src="{% static 'img/background/hopfen-fields.jpg' %}" alt="Beautiful hops on a dark background" class="hero-banner__image">
+        <img
+            src="{% static 'img/background/hopfen-fields.jpg' %}"
+            alt="Beautiful hops on a dark background"
+            class="hero-banner__image"
+        />
         <div class="hero-banner__overlay"></div>
     </section>
 
@@ -14,41 +14,59 @@
         <aside class="sidebar filter-menu">
             <div class="sidebar__section">
                 <h3 class="section-title">Keywords</h3>
-                <div class="keywords-list">
-                </div>
+                <div class="keywords-list"></div>
             </div>
 
             <div class="sidebar__section">
                 <h3 class="section-title">Product Type</h3>
-                <div class="checkbox-group">
-                    <label class="checkbox-container">Hops
-                        <input type="checkbox" data-keyword="Hops">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="checkbox-container">Malts
-                        <input type="checkbox" data-keyword="Malts">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="checkbox-container">Yeast
-                        <input type="checkbox" data-keyword="Yeast">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="checkbox-container">Adjuncts
-                        <input type="checkbox" data-keyword="Adjuncts">
-                        <span class="checkmark"></span>
-                    </label>
+                <div class="category-links-group">
+                    <!-- Ссылка на все товары -->
+                    <div class="category-item">
+                        <a
+                            href="{% url 'products' %}"
+                            class="{% if not current_category %}active-category{% endif %}"
+                        >
+                            All Products
+                        </a>
+                    </div>
+
+                    <!-- Динамический список из БД -->
+                    {% for cat in categories %}
+                    <div class="category-item">
+                        <a
+                            href="{% url 'products' %}?category={{ cat.slug }}"
+                            class="{% if current_category == cat.slug %}active-category{% endif %}"
+                        >
+                            {{ cat.name }}
+                        </a>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </aside>
 
         <section class="products-area product-grid-section">
             <div class="search-sort-bar">
-                <div class="search-input-wrapper">
-                    <input type="text" placeholder="Search" class="search-input">
-                    <button class="search-button" aria-label="Search">
+                <form
+                    action="{% url 'products' %}"
+                    method="get"
+                    class="search-input-wrapper"
+                >
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Search ingredients..."
+                        class="search-input"
+                        value="{{ search_query|default:'' }}"
+                    />
+                    <button
+                        type="submit"
+                        class="search-button"
+                        aria-label="Search"
+                    >
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
-                </div>
+                </form>
                 <div class="sort-options">
                     <span>Sort by:</span>
                     <button class="sort-button active-sort">Price</button>
@@ -58,37 +76,60 @@
             </div>
 
             <div class="product-grid">
-                {% if featured_products %}
-                    {% for product in featured_products %}
-                        <a href="{% url 'product_detail' slug=product.slug %}" class="product-card-link">
-                            <div class="product-card">
-                                {% if product.image %}
-                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-card__image">
-                                {% else %}
-                                    <img src="{% static 'img/products/placeholder.jpg' %}" alt="{{ product.name }}" class="product-card__image">
-                                {% endif %}
-                                <div class="product-card__info">
-                                    <h4 class="product-card__name">{{ product.name }}</h4>
-                                    <p class="product-card__price">${{ product.price }}</p>
-                                    <p class="product-card__description">{{ product.description|truncatewords:5 }}</p>  <!-- Короткое описание -->
-                                </div>
-                            </div>
-                        </a>
-                    {% endfor %}
-{% else %}
-    <p>Нет продуктов в БД. Добавь в админке!</p>
-    <!-- Пример статической карточки без конкретного slug (или удали) -->
-    <a href="{% url 'home' %}" class="product-card-link">  <!-- Временная ссылка на главную -->
-        <div class="product-card">
-            <img src="{% static 'img/products/placeholder.jpg' %}" alt="Placeholder" class="product-card__image">
-            <div class="product-card__info">
-                <h4 class="product-card__name">Тестовый продукт</h4>
-                <p class="product-card__price">$0.00</p>
-                <p class="product-card__description">Добавь реальные продукты!</p>
-            </div>
-        </div>
-    </a>
-{% endif %}
+                {% if products %} {% for product in products %}
+                <a
+                    href="{% url 'product_detail' slug=product.slug %}"
+                    class="product-card-link"
+                >
+                    <div class="product-card">
+                        {% if product.image %}
+                        <img
+                            src="{{ product.image.url }}"
+                            alt="{{ product.name }}"
+                            class="product-card__image"
+                        />
+                        {% else %}
+                        <img
+                            src="{% static 'img/products/placeholder.jpg' %}"
+                            alt="{{ product.name }}"
+                            class="product-card__image"
+                        />
+                        {% endif %}
+                        <div class="product-card__info">
+                            <h4 class="product-card__name">
+                                {{ product.name }}
+                            </h4>
+                            <p class="product-card__price">
+                                ${{ product.price }}
+                            </p>
+                            <p class="product-card__description">
+                                {{ product.description|truncatewords:5 }}
+                            </p>
+                            <!-- Короткое описание -->
+                        </div>
+                    </div>
+                </a>
+                {% endfor %} {% else %}
+                <p>Нет продуктов в БД. Добавь в админке!</p>
+                <!-- Пример статической карточки без конкретного slug (или удали) -->
+                <a href="{% url 'home' %}" class="product-card-link">
+                    <!-- Временная ссылка на главную -->
+                    <div class="product-card">
+                        <img
+                            src="{% static 'img/products/placeholder.jpg' %}"
+                            alt="Placeholder"
+                            class="product-card__image"
+                        />
+                        <div class="product-card__info">
+                            <h4 class="product-card__name">Тестовый продукт</h4>
+                            <p class="product-card__price">$0.00</p>
+                            <p class="product-card__description">
+                                Добавь реальные продукты!
+                            </p>
+                        </div>
+                    </div>
+                </a>
+                {% endif %}
             </div>
 
             <div class="pagination">

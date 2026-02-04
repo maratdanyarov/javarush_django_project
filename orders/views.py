@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.views.decorators.http import require_POST
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import permissions, viewsets
 
 from products.models import Product
@@ -131,7 +132,7 @@ def cart_add(request, product_id: int):
 
 
 @require_POST
-def cart_remove(request, product_id: int):
+def cart_remove(request, product_id: int) -> JsonResponse:
     """
     Удалить товар из корзины.
 
@@ -213,12 +214,21 @@ def cart_clear(request):
     return redirect('orders:cart')
 
 
+@extend_schema_view(
+    list=extend_schema(description="Получить список всех заказов текущего пользователя."),
+    retrieve=extend_schema(description="Получить детали конкретного заказа.")
+)
 class OrderViewSet(viewsets.ModelViewSet):
+    """API для управления заказами текущего пользователя."""
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        """Получить список заказов текущего пользователя."""
+        if getattr(self, "swagger_fake_view", False):
+            return Order.objects.none()
         return Order.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
+        """Создать новый заказ для текущего пользователя."""
         serializer.save(user=self.request.user)

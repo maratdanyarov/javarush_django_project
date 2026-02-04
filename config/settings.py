@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
-
+    
+    'drf_spectacular',
     'products',
     'orders',
     'reviews',
@@ -63,6 +64,7 @@ MIDDLEWARE = [
 
 
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -184,4 +186,11 @@ MESSAGE_TAGS = {
     messages.SUCCESS: 'success',
     messages.WARNING: 'warning',
     messages.ERROR: 'error',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Hop & Barley API',
+    'DESCRIPTION': 'API for beer brew ingredients shop',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
