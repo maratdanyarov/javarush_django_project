@@ -14,11 +14,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -26,22 +31,29 @@ from orders.views import OrderViewSet
 from products.views import ProductViewSet
 
 router = DefaultRouter()
-router.register(r'products', ProductViewSet, basename='product')
-router.register(r'orders', OrderViewSet, basename='order')
+router.register(r"products", ProductViewSet, basename="product")
+router.register(r"orders", OrderViewSet, basename="order")
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
-    path('accounts/', include('users.urls')),
-    path('', include('orders.urls')),
-    path('', include('products.urls')),
-
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path("admin/", admin.site.urls),
+    # API Documentation
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/docs/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path("api/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
+    # API endpoints
+    path("api/", include(router.urls)),
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    # Web URLs
+    path("accounts/", include("users.urls")),
+    path("", include("orders.urls")),
+    path("", include("products.urls")),
+    path("", include("reviews.urls")),
 ]
 
 if settings.DEBUG:
