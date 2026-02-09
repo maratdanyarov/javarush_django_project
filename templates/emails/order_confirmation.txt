@@ -1,0 +1,31 @@
+Order Confirmation - Hop & Barley
+
+Dear {{ order.full_name }},
+
+Thank you for your order at Hop & Barley! Your order has been received and is being processed.
+
+ORDER DETAILS
+-------------
+Order Number: #{{ order.id }}
+Order Date: {{ order.created_at|date:"F d, Y H:i" }}
+Status: {{ order.get_status_display }}
+
+ITEMS ORDERED
+-------------
+{% for item in order.items.all %}
+- {{ item.product.name }} x {{ item.quantity }} - ${{ item.price }}
+{% endfor %}
+
+Total: ${{ order.total_price }}
+
+SHIPPING ADDRESS
+----------------
+{{ order.full_name }}
+{{ order.address }}
+{{ order.city }}
+Phone: {{ order.phone }}
+
+If you have any questions about your order, please contact us.
+
+Best regards,
+The Hop & Barley Team
