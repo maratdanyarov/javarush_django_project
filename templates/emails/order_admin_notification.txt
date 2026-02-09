@@ -1,0 +1,26 @@
+New Order Received - Hop & Barley
+
+A new order has been placed on the store.
+
+ORDER DETAILS
+-------------
+Order Number: #{{ order.id }}
+Order Date: {{ order.created_at|date:"F d, Y H:i" }}
+Customer: {{ order.user.username }} ({{ order.user.email }})
+
+CUSTOMER DETAILS
+----------------
+Full Name: {{ order.full_name }}
+Phone: {{ order.phone }}
+City: {{ order.city }}
+Address: {{ order.address }}
+
+ITEMS ORDERED
+-------------
+{% for item in order.items.all %}
+- {{ item.product.name }} x {{ item.quantity }} - ${{ item.price }}
+{% endfor %}
+
+Total: ${{ order.total_price }}
+
+View in admin: {{ admin_url }}

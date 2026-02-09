@@ -1,6 +1,6 @@
 """Views для управления корзиной покупок."""
 
-from django.contrib import messages
+from django.contrib import messages  # type: ignore
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.http import JsonResponse
@@ -16,6 +16,7 @@ from .cart import Cart
 from .forms import OrderCreateForm
 from .models import Order, OrderItem
 from .serializers import OrderSerializer
+from .services import send_order_confirmation_email
 
 
 class CartView(View):
@@ -88,6 +89,10 @@ class OrderCreateView(LoginRequiredMixin, View):
                         product.save()
 
                     cart.clear()
+
+                    send_order_confirmation_email(order)
+                    send_order_confirmation_email(order, request)
+
                     messages.success(request, f'Order #{order.id} created!')
                     return render(request, 'order_created.html', {'order': order})
             except Exception as e:
@@ -214,21 +219,14 @@ def cart_clear(request):
     return redirect('orders:cart')
 
 
-@extend_schema_view(
-    list=extend_schema(description="Получить список всех заказов текущего пользователя."),
-    retrieve=extend_schema(description="Получить детали конкретного заказа.")
-)
 class OrderViewSet(viewsets.ModelViewSet):
-    """API для управления заказами текущего пользователя."""
+    """API ViewSet for Order model."""
+
     serializer_class = OrderSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        """Получить список заказов текущего пользователя."""
-        if getattr(self, "swagger_fake_view", False):
-            return Order.objects.none()
         return Order.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        """Создать новый заказ для текущего пользователя."""
         serializer.save(user=self.request.user)
