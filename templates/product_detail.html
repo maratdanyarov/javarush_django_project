@@ -1,162 +1,110 @@
-{% extends 'base.html' %} {% load static %} {% block title %}{{ product.name }}
-| Hop & Barley{% endblock %} {% block content %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} | Hop & Barley{% endblock %}
+
+{% block content %}
 <main class="page-product">
-    <div class="container">
-        <!-- Product Info Section -->
-        <section class="product-details-section">
-            <div class="product-image-container">
-                {% if product.image %}
-                <img
-                    src="{{ product.image.url }}"
-                    alt="{{ product.name }}"
-                    class="product-image"
-                />
-                {% else %}
-                <img
-                    src="{% static 'img/products/placeholder.jpg' %}"
-                    alt="{{ product.name }}"
-                    class="product-image"
-                />
-                {% endif %}
-            </div>
-            <div class="product-info-column">
-                <div class="product-title-price">
-                    <h1 class="product-name">{{ product.name }}</h1>
-                    <div class="price-section">
-                        <span class="price-tag">per item</span>
-                        <!-- Adjust as needed -->
-                        <p class="product-price">${{ product.price }}</p>
-                    </div>
-                </div>
-                <div class="product-description">
-                    {{ product.description|linebreaks }}
-                    <!-- Renders description with line breaks -->
-                </div>
-                <!-- Add cart section from your initial query -->
-                <div class="product-cart-section">
-                    <!-- Stock status -->
-                    <div class="stock-status">
-                        {% if product.stock > 0 %}
-                        <span class="stock-available"
-                            ><i class="fa-solid fa-circle-check"></i> In Stock:
-                            {{ product.stock }} available</span
-                        >
-                        {% else %}
-                        <span class="stock-unavailable"
-                            ><i class="fa-solid fa-circle-xmark"></i> Out of
-                            Stock</span
-                        >
-                        {% endif %}
-                    </div>
-                    <!-- Price (already in title-price, but duplicate if needed) -->
-                    <div class="product-price">
-                        <span class="price-amount">${{ product.price }}</span>
-                        <span class="price-label">per item</span>
-                    </div>
-                    <!-- Quantity -->
-                    <div class="quantity-section">
-                        <label for="product-quantity">Quantity:</label>
-                        <div class="quantity-controls">
-                            <button
-                                type="button"
-                                class="qty-btn-minus"
-                                data-product-id="{{ product.id }}"
-                            >
-                                <i class="fa-solid fa-minus"></i>
-                            </button>
-                            <input
-                                type="number"
-                                id="product-quantity"
-                                class="qty-input"
-                                value="1"
-                                min="1"
-                                max="{{ product.stock }}"
-                                data-product-id="{{ product.id }}"
-                            />
-                            <button
-                                type="button"
-                                class="qty-btn-plus"
-                                data-product-id="{{ product.id }}"
-                            >
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Add to Cart Button -->
-                    <button
-                        type="button"
-                        class="button button--primary btn-add-to-cart"
-                        data-product-id="{{ product.id }}"
-                        {%
-                        if
-                        product.stock=""
-                        ="0"
-                        %}disabled{%
-                        endif
-                        %}
-                    >
-                        <i class="fa-solid fa-cart-shopping"></i>
-                        {% if product.stock > 0 %}Add to Cart{% else %}Out of
-                        Stock{% endif %}
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Technical Specifications -->
-        <section class="accordion-section">
-            <div class="accordion-item">
-                <div class="accordion-title">
-                    <h3>Technical Specifications</h3>
-                    <i class="fa-solid fa-chevron-down accordion-icon"></i>
-                </div>
-                <div class="accordion-content">
-                    <!-- Динамично, если добавишь поле specs, или статично -->
-                    <ul>
-                        <li><strong>Price:</strong> ${{ product.price }}</li>
-                        <!-- Пример динамики -->
-                        <!-- Добавь другие из description или модели -->
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Reviews -->
-        <section class="reviews-section">
-            <h2 class="reviews-title">Reviews ({{ product.reviews.count }})</h2>
-
-            {% if product.average_rating %}
-            <div class="average-rating">
-                <span class="rating-value">{{ product.average_rating }}/5</span>
-                <span class="rating-stars">
-                    {% for i in "12345" %} {% if forloop.counter <=
-                    product.average_rating %}
-                    <i class="fa-solid fa-star"></i>
-                    {% else %}
-                    <i class="fa-regular fa-star"></i>
-                    {% endif %} {% endfor %}
-                </span>
-            </div>
+  <div class="container">
+    <!-- Product Info Section -->
+    <section class="product-details-section">
+      <div class="product-image-container">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+        {% else %}
+          <img src="{% static 'img/products/placeholder.jpg' %}" alt="{{ product.name }}" class="product-image">
+        {% endif %}
+      </div>
+      <div class="product-info-column">
+        <div class="product-title-price">
+          <h1 class="product-name">{{ product.name }}</h1>
+          <div class="price-section">
+            <span class="price-tag">per item</span>  <!-- Adjust as needed -->
+            <p class="product-price">${{ product.price }}</p>
+          </div>
+        </div>
+        <div class="product-description">
+          {{ product.description|linebreaks }}  <!-- Renders description with line breaks -->
+        </div>
+        <!-- Add cart section from your initial query -->
+        <div class="product-cart-section">
+          <!-- Stock status -->
+          <div class="stock-status">
+            {% if product.stock > 0 %}
+              <span class="stock-available"><i class="fa-solid fa-circle-check"></i> In Stock: {{ product.stock }} available</span>
+            {% else %}
+              <span class="stock-unavailable"><i class="fa-solid fa-circle-xmark"></i> Out of Stock</span>
             {% endif %}
+          </div>
+          <!-- Price (already in title-price, but duplicate if needed) -->
+          <div class="product-price">
+            <span class="price-amount">${{ product.price }}</span>
+            <span class="price-label">per item</span>
+          </div>
+          <!-- Quantity -->
+          <div class="quantity-section">
+            <label for="product-quantity">Quantity:</label>
+            <div class="quantity-controls">
+              <button type="button" class="qty-btn-minus" data-product-id="{{ product.id }}"><i class="fa-solid fa-minus"></i></button>
+              <input type="number" id="product-quantity" class="qty-input" value="1" min="1" max="{{ product.stock }}" data-product-id="{{ product.id }}">
+              <button type="button" class="qty-btn-plus" data-product-id="{{ product.id }}"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+          <!-- Add to Cart Button -->
+          <button type="button" class="button button--primary btn-add-to-cart" data-product-id="{{ product.id }}" {% if product.stock == 0 %}disabled{% endif %}>
+            <i class="fa-solid fa-cart-shopping"></i>
+            {% if product.stock > 0 %}Add to Cart{% else %}Out of Stock{% endif %}
+          </button>
+        </div>
+      </div>
+    </section>
 
-            <!-- Review Form -->
-            {% if user.is_authenticated %} {% if can_review %}
+<!-- Technical Specifications -->
+<section class="accordion-section">
+    <div class="accordion-item">
+        <div class="accordion-title">
+            <h3>Technical Specifications</h3>
+            <i class="fa-solid fa-chevron-down accordion-icon"></i>
+        </div>
+        <div class="accordion-content">
+            <!-- Динамично, если добавишь поле specs, или статично -->
+            <ul>
+                <li><strong>Price:</strong> ${{ product.price }}</li>  <!-- Пример динамики -->
+                <!-- Добавь другие из description или модели -->
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Reviews -->
+<section class="reviews-section">
+    <h2 class="reviews-title">Reviews ({{ product.reviews.count }})</h2>
+
+    {% if product.average_rating %}
+    <div class="average-rating">
+        <span class="rating-value">{{ product.average_rating }}/5</span>
+        <span class="rating-stars">
+            {% for i in "12345" %}
+                {% if forloop.counter <= product.average_rating %}
+                    <i class="fa-solid fa-star"></i>
+                {% else %}
+                    <i class="fa-regular fa-star"></i>
+                {% endif %}
+            {% endfor %}
+        </span>
+    </div>
+    {% endif %}
+
+    <!-- Review Form -->
+    {% if user.is_authenticated %}
+        {% if can_review %}
             <div class="review-form-container">
                 <h3>Write a Review</h3>
-                <form
-                    method="post"
-                    action="{% url 'review_create' slug=product.slug %}"
-                    class="review-form"
-                >
+                <form method="post" action="{% url 'review_create' slug=product.slug %}" class="review-form">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="rating">Rating:</label>
-                        <select
-                            name="rating"
-                            id="rating"
-                            class="form-control"
-                            required
-                        >
+                        <select name="rating" id="rating" class="form-control" required>
                             <option value="5">5 - Excellent</option>
                             <option value="4">4 - Good</option>
                             <option value="3">3 - Average</option>
@@ -166,65 +114,51 @@
                     </div>
                     <div class="form-group">
                         <label for="text">Your Review:</label>
-                        <textarea
-                            name="text"
-                            id="text"
-                            class="form-control"
-                            rows="4"
-                            required
-                            placeholder="Share your experience with this product..."
-                        ></textarea>
+                        <textarea name="text" id="text" class="form-control" rows="4" required placeholder="Share your experience with this product..."></textarea>
                     </div>
-                    <button type="submit" class="button button--primary">
-                        Submit Review
-                    </button>
+                    <button type="submit" class="button button--primary">Submit Review</button>
                 </form>
             </div>
-            {% elif has_reviewed %}
+        {% elif has_reviewed %}
             <p class="review-notice">You have already reviewed this product.</p>
-            {% else %}
-            <p class="review-notice">
-                You can only review products you have purchased.
-            </p>
-            {% endif %} {% else %}
-            <p class="review-notice">
-                <a href="{% url 'login' %}">Log in</a> to leave a review.
-            </p>
-            {% endif %}
+        {% else %}
+            <p class="review-notice">You can only review products you have purchased.</p>
+        {% endif %}
+    {% else %}
+        <p class="review-notice"><a href="{% url 'login' %}">Log in</a> to leave a review.</p>
+    {% endif %}
 
-            <!-- Reviews List -->
-            <div class="reviews-grid">
-                {% for review in product.reviews.all %}
-                <div class="review-card">
-                    <div class="review-header">
-                        <span class="review-author"
-                            >{{ review.user.username }}</span
-                        >
-                        <span class="review-date"
-                            >{{ review.created_at|date:"M d, Y" }}</span
-                        >
-                    </div>
-                    <div class="review-rating">
-                        {% for i in "12345" %} {% if forloop.counter <=
-                        review.rating %}
-                        <i class="fa-solid fa-star"></i>
-                        {% else %}
-                        <i class="fa-regular fa-star"></i>
-                        {% endif %} {% endfor %}
-                        <span class="rating-text">{{ review.rating }}/5</span>
-                    </div>
-                    <div class="review-text">{{ review.text|linebreaks }}</div>
-                </div>
-                {% empty %}
-                <p class="no-reviews">
-                    No reviews yet. Be the first to review this product!
-                </p>
-                {% endfor %}
+    <!-- Reviews List -->
+    <div class="reviews-grid">
+        {% for review in product.reviews.all %}
+        <div class="review-card">
+            <div class="review-header">
+                <span class="review-author">{{ review.user.username }}</span>
+                <span class="review-date">{{ review.created_at|date:"M d, Y" }}</span>
             </div>
-        </section>
+            <div class="review-rating">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= review.rating %}
+                        <i class="fa-solid fa-star"></i>
+                    {% else %}
+                        <i class="fa-regular fa-star"></i>
+                    {% endif %}
+                {% endfor %}
+                <span class="rating-text">{{ review.rating }}/5</span>
+            </div>
+            <div class="review-text">
+                {{ review.text|linebreaks }}
+            </div>
+        </div>
+        {% empty %}
+        <p class="no-reviews">No reviews yet. Be the first to review this product!</p>
+        {% endfor %}
     </div>
+</section>
+  </div>
 </main>
-{% endblock %} {% block extra_js %}
-<script src="{% static 'js/cart.js' %}"></script>
-<!-- If exists -->
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/cart.js' %}"></script>  <!-- If exists -->
 {% endblock %}
