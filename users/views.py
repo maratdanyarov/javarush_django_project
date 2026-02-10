@@ -7,10 +7,12 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, TemplateView
+from rest_framework import generics, permissions
 
 from orders.models import Order
 
 from .forms import RegisterForm, ProfileUpdateForm
+from .serializers import UserRegistrationSerializer, UserSerializer
 
 
 class RegisterView(CreateView):
@@ -32,7 +34,7 @@ class ProfileView(LoginRequiredMixin, TemplateView):
             "-created_at"
         )
         context["profile_form"] = ProfileUpdateForm(instance=self.request.user)
-        context["password_form"] = PasswordResetForm(self.request.user)
+        context["password_form"] = PasswordChangeForm(self.request.user)
         return context
 
 
@@ -67,3 +69,32 @@ class PasswordChangeView(LoginRequiredMixin, View):
 def logout_view(request):
     logout(request)
     return redirect("home")
+
+
+# API Views
+class RegisterAPIView(generics.CreateAPIView):
+    """API endpoint for user registration."""
+
+    serializer_class = UserRegistrationSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        from rest_framework.response import Response
+        from rest_framework import status
+        return Response({
+            'message': 'User registered successfully.',
+            'user': UserSerializer(user).data
+        }, status=status.HTTP_201_CREATED)
+
+
+class UserProfileAPIView(generics.RetrieveUpdateAPIView):
+    """API endpoint for viewing and updating user profile."""
+
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
