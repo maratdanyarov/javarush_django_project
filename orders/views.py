@@ -16,7 +16,7 @@ from .cart import Cart
 from .forms import OrderCreateForm
 from .models import Order, OrderItem
 from .serializers import OrderSerializer
-from .services import send_order_confirmation_email
+from .services import send_order_confirmation_email, send_order_admin_notification
 
 
 class CartView(View):
@@ -91,7 +91,7 @@ class OrderCreateView(LoginRequiredMixin, View):
                     cart.clear()
 
                     send_order_confirmation_email(order)
-                    send_order_confirmation_email(order, request)
+                    send_order_admin_notification(order, request)
 
                     messages.success(request, f'Order #{order.id} created!')
                     return render(request, 'order_created.html', {'order': order})
@@ -137,7 +137,7 @@ def cart_add(request, product_id: int):
 
 
 @require_POST
-def cart_remove(request, product_id: int) -> JsonResponse:
+def cart_remove(request, product_id: int):
     """
     Удалить товар из корзины.
 
