@@ -1,13 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth import logout, update_session_auth_hash
-from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, TemplateView
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
 
 from orders.models import Order
 
@@ -65,6 +66,7 @@ class PasswordChangeView(LoginRequiredMixin, View):
                 messages.error(request, error)
         return redirect("users:profile")
 
+
 @require_POST
 def logout_view(request):
     logout(request)
@@ -82,12 +84,14 @@ class RegisterAPIView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        from rest_framework.response import Response
-        from rest_framework import status
-        return Response({
-            'message': 'User registered successfully.',
-            'user': UserSerializer(user).data
-        }, status=status.HTTP_201_CREATED)
+
+        return Response(
+            {
+                "message": "User registered successfully.",
+                "user": UserSerializer(user).data,
+            },
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class UserProfileAPIView(generics.RetrieveUpdateAPIView):

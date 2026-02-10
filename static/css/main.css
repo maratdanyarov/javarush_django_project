@@ -310,6 +310,39 @@ header {
     display: block;
 }
 
+/* Category Links */
+.category-links-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.category-link {
+    display: block;
+    padding: 10px 12px;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--grey-text);
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.category-link:hover {
+    background-color: var(--background-grey);
+    color: var(--black-main);
+}
+
+.category-link--active {
+    background-color: var(--background-green);
+    color: var(--green);
+    font-weight: 600;
+}
+
+.category-link--active:hover {
+    background-color: var(--background-green);
+    color: var(--green);
+}
+
 /* Search & Sort Bar */
 .search-sort-bar {
     width: 100%;

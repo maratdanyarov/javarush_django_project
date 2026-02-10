@@ -13,33 +13,21 @@ Hop & Barley{% endblock %} {% block content %}
     <div class="container main-content-grid">
         <aside class="sidebar filter-menu">
             <div class="sidebar__section">
-                <h3 class="section-title">Keywords</h3>
-                <div class="keywords-list"></div>
-            </div>
-
-            <div class="sidebar__section">
                 <h3 class="section-title">Product Type</h3>
                 <div class="category-links-group">
-                    <!-- Ссылка на все товары -->
-                    <div class="category-item">
-                        <a
-                            href="{% url 'products' %}"
-                            class="{% if not current_category %}active-category{% endif %}"
-                        >
-                            All Products
-                        </a>
-                    </div>
-
-                    <!-- Динамический список из БД -->
+                    <a
+                        href="{% url 'products' %}"
+                        class="category-link {% if not current_category %}category-link--active{% endif %}"
+                    >
+                        All Products
+                    </a>
                     {% for cat in categories %}
-                    <div class="category-item">
-                        <a
-                            href="{% url 'products' %}?category={{ cat.slug }}"
-                            class="{% if current_category == cat.slug %}active-category{% endif %}"
-                        >
-                            {{ cat.name }}
-                        </a>
-                    </div>
+                    <a
+                        href="{% url 'products' %}?category={{ cat.slug }}"
+                        class="category-link {% if current_category == cat.slug %}category-link--active{% endif %}"
+                    >
+                        {{ cat.name }}
+                    </a>
                     {% endfor %}
                 </div>
             </div>
@@ -82,19 +70,13 @@ Hop & Barley{% endblock %} {% block content %}
                     class="product-card-link"
                 >
                     <div class="product-card">
-                        {% if product.image %}
+                        {% with 'img/products/'|add:product.slug|add:'.jpg' as product_img %}
                         <img
-                            src="{{ product.image.url }}"
+                            src="{% static product_img %}"
                             alt="{{ product.name }}"
                             class="product-card__image"
                         />
-                        {% else %}
-                        <img
-                            src="{% static 'img/products/placeholder.jpg' %}"
-                            alt="{{ product.name }}"
-                            class="product-card__image"
-                        />
-                        {% endif %}
+                        {% endwith %}
                         <div class="product-card__info">
                             <h4 class="product-card__name">
                                 {{ product.name }}

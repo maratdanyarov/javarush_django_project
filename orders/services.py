@@ -17,7 +17,7 @@ def send_order_confirmation_email(order: Order) -> bool:
     subject = f"Order Confirmation - #{order.id}"
     context = {'order': order}
 
-    text_context = render_to_string("emails/order_confirmation.txt.", context)
+    text_context = render_to_string("emails/order_confirmation.txt", context)
     html_context = render_to_string("emails/order_confirmation.html", context)
 
     try:

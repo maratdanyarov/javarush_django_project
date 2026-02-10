@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 from django.utils import timezone
 from django.utils.text import slugify
 
@@ -50,5 +51,5 @@ class Product(models.Model):
         """Calculate the average rating from all reviews."""
         reviews = self.reviews.all()
         if reviews.exists():
-            return round(sum(r.rating for r in reviews) / reviews.count(), 1)
+            return round(reviews.aggregate(Avg("rating"))["rating__avg"], 2)
         return 0

@@ -14,12 +14,12 @@
     <div class="container main-content-grid">
         <!-- Sidebar Filters -->
         <aside class="sidebar filter-menu">
-            <form method="get" action="{% url 'product_list' %}">
+            <form method="get" action="{% url 'products' %}">
                 <div class="sidebar__section">
                     <h3 class="section-title">Categories</h3>
                     <div class="checkbox-group">
                         <label class="checkbox-container">
-                            <a href="{% url 'product_list' %}" class="{% if not current_category %}active{% endif %}">All Products</a>
+                            <a href="{% url 'products' %}" class="{% if not current_category %}active{% endif %}">All Products</a>
                         </label>
                         {% for category in categories %}
                         <label class="checkbox-container">
@@ -47,7 +47,7 @@
         <section class="products-area product-grid-section">
             <!-- Search and Sort Bar -->
             <div class="search-sort-bar">
-                <form method="get" action="{% url 'product_list' %}" class="search-input-wrapper">
+                <form method="get" action="{% url 'products' %}" class="search-input-wrapper">
                     <input type="text" name="search" placeholder="Search products..." class="search-input" value="{{ search_query }}">
                     {% if current_category %}<input type="hidden" name="category" value="{{ current_category }}">{% endif %}
                     <input type="hidden" name="sort" value="{{ current_sort }}">

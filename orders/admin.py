@@ -1,5 +1,5 @@
 from django.contrib import admin, messages
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.template.response import TemplateResponse
 from django.urls import path
 
