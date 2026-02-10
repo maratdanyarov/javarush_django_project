@@ -27,8 +27,9 @@ from drf_spectacular.views import (
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from orders.views import OrderViewSet
+from orders.views import OrderViewSet, CartAPIView
 from products.views import ProductViewSet
+from users.views import RegisterAPIView, UserProfileAPIView
 
 router = DefaultRouter()
 router.register(r"products", ProductViewSet, basename="product")
@@ -49,6 +50,9 @@ urlpatterns = [
     path("api/", include(router.urls)),
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/users/register/", RegisterAPIView.as_view(), name="api_register"),
+    path("api/users/profile/", UserProfileAPIView.as_view(), name="api_profile"),
+    path("api/cart/", CartAPIView.as_view(), name="api_cart"),
     # Web URLs
     path("accounts/", include("users.urls")),
     path("", include("orders.urls")),
