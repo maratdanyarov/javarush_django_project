@@ -1,5 +1,9 @@
-{% extends "base.html" %} {% load static %} {% block title %}My Account | Hop &
-Barley{% endblock %} {% block content %}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}My Account | Hop & Barley{% endblock %}
+
+{% block content %}
 <main class="account-page-wrapper">
     <div class="account-container">
         <div class="account-tabs">
@@ -9,9 +13,13 @@ Barley{% endblock %} {% block content %}
             <button class="account-tab" data-tab-target="#account-info">
                 Account Information
             </button>
+            <button class="account-tab" data-tab-target="#password-change">
+                Change Password
+            </button>
         </div>
 
         <div class="tab-content">
+            <!-- Order History Tab -->
             <div id="order-history" class="tab-pane active">
                 <div class="order-history-table">
                     <div class="order-table-header">
@@ -26,8 +34,9 @@ Barley{% endblock %} {% block content %}
                                 #{{ order.id }} - {{ order.created_at|date:"d M Y" }}
                             </div>
                             <div class="order-table-cell">
-                                {% if order.is_paid %} Paid {% else %} Pending
-                                {%endif %}
+                                <span class="status-badge status-{{ order.status }}">
+                                    {{ order.get_status_display }}
+                                </span>
                             </div>
                             <div class="order-table-cell">
                                 ${{ order.total_price }}
@@ -40,24 +49,51 @@ Barley{% endblock %} {% block content %}
                 </div>
             </div>
 
+            <!-- Account Information Tab -->
             <div id="account-info" class="tab-pane">
                 <div class="account-form-container">
                     <h2>Personal Info</h2>
-                    <form id="account-info-form">
+                    <form action="{% url 'users:profile_update' %}" method="POST">
+                        {% csrf_token %}
                         <div class="checkout-form-group">
-                            <label>Full Name</label>
+                            <label for="id_first_name">First Name</label>
                             <input
                                 type="text"
+                                name="first_name"
+                                id="id_first_name"
                                 class="Input"
-                                value="{{ user.username }}"
+                                value="{{ user.first_name }}"
                             />
                         </div>
                         <div class="checkout-form-group">
-                            <label>Email</label>
+                            <label for="id_last_name">Last Name</label>
+                            <input
+                                type="text"
+                                name="last_name"
+                                id="id_last_name"
+                                class="Input"
+                                value="{{ user.last_name }}"
+                            />
+                        </div>
+                        <div class="checkout-form-group">
+                            <label for="id_email">Email</label>
                             <input
                                 type="email"
+                                name="email"
+                                id="id_email"
                                 class="Input"
                                 value="{{ user.email }}"
+                                required
+                            />
+                        </div>
+                        <div class="checkout-form-group">
+                            <label for="id_phone">Phone</label>
+                            <input
+                                type="text"
+                                name="phone"
+                                id="id_phone"
+                                class="Input"
+                                value="{{ user.phone }}"
                             />
                         </div>
                         <button type="submit" class="button button--primary">
@@ -72,6 +108,49 @@ Barley{% endblock %} {% block content %}
                             class="button button--secondary button--full-width"
                         >
                             Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Password Change Tab -->
+            <div id="password-change" class="tab-pane">
+                <div class="account-form-container">
+                    <h2>Change Password</h2>
+                    <form action="{% url 'users:password_change' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="checkout-form-group">
+                            <label for="id_old_password">Current Password</label>
+                            <input
+                                type="password"
+                                name="old_password"
+                                id="id_old_password"
+                                class="Input"
+                                required
+                            />
+                        </div>
+                        <div class="checkout-form-group">
+                            <label for="id_new_password1">New Password</label>
+                            <input
+                                type="password"
+                                name="new_password1"
+                                id="id_new_password1"
+                                class="Input"
+                                required
+                            />
+                        </div>
+                        <div class="checkout-form-group">
+                            <label for="id_new_password2">Confirm New Password</label>
+                            <input
+                                type="password"
+                                name="new_password2"
+                                id="id_new_password2"
+                                class="Input"
+                                required
+                            />
+                        </div>
+                        <button type="submit" class="button button--primary">
+                            Change Password
                         </button>
                     </form>
                 </div>
