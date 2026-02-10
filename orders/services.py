@@ -1,7 +1,6 @@
-"""Email notification services for orders."""
-from django.core.mail import EmailMultiAlternatives  # type: ignore
-from django.template.loader import render_to_string  # type: ignore
-from rest_framework import settings  # type: ignore
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 from .models import Order
 
