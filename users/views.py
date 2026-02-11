@@ -23,6 +23,11 @@ class RegisterView(CreateView):
     template_name = "register.html"
     success_url = reverse_lazy("users:login")
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, "Registration successful! Please log in.")
+        return response
+
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     """User profile view showing account info and order history."""
@@ -70,6 +75,7 @@ class PasswordChangeView(LoginRequiredMixin, View):
 @require_POST
 def logout_view(request):
     logout(request)
+    messages.success(request, "You have been logged out successfully.")
     return redirect("home")
 
 

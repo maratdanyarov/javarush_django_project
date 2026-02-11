@@ -10,14 +10,19 @@ from .models import Category, Product
 from .serializers import ProductSerializer, ReviewSerializer
 
 
-class HomeView(TemplateView):
+class HomeView(ListView):
     """Homepage view with featured products."""
 
+    model = Product
     template_name = 'home.html'
+    context_object_name = 'products'
+    paginate_by = 6
+
+    def get_queryset(self):
+        return Product.objects.filter(is_active=True).order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['products'] = Product.objects.filter(is_active=True)[:5]
         context['categories'] = Category.objects.all()
         return context
 
@@ -28,7 +33,7 @@ class ProductListView(ListView):
     model = Product
     template_name = "products.html"
     context_object_name = "products"
-    paginate_by = 12
+    paginate_by = 6
 
     def get_queryset(self):
         queryset = Product.objects.filter(is_active=True).annotate(
@@ -105,6 +110,14 @@ class ProductDetailView(DetailView):
 class GuidesRecipesView(TemplateView):
     template_name = 'guides-recipes.html'
 
+class CommunityView(TemplateView):
+    template_name = 'community.html'
+
+class ResourcesView(TemplateView):
+    template_name = 'resources.html'
+
+class ContactView(TemplateView):
+    template_name = 'contact.html'
 
 class ProductViewSet(viewsets.ModelViewSet):
     """API ViewSet for Product model with reviews support."""

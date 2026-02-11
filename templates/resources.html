@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Products | Hop & Barley{% endblock %}
+
+{% block content %}
+
+<!-- Main Content -->
+<main class="static-page-wrapper">
+  <div class="container">
+    <div class="static-page-content">
+      <h1 class="static-page-title">Resources</h1>
+      <p class="static-page-subtitle">Coming Soon!</p>
+      <div class="static-page-text">
+        <p>We are working hard to bring you the best resources from the world of homebrewing.</p>
+        <p>Stay tuned for updates and follow us in social networks!</p>
+      </div>
+      <a href="{% url 'home' %}" class="button button--primary">Back to Products</a>
+    </div>
+  </div>
+</main>
+{% endblock %}

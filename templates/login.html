@@ -11,11 +11,26 @@
   <div class="auth-form-container">
     <div class="auth-container auth-container--login">
       <h1 class="auth-title">Sign In</h1>
+
+      {% if form.errors %}
+      <div style="background-color: #fee; border: 1px solid #fcc; padding: 10px; margin-bottom: 15px; border-radius: 5px; color: #c33;">
+          <strong>Login failed:</strong> Invalid username or password.
+      </div>
+      {% endif %}
+
+      {% if messages %}
+      {% for message in messages %}
+      <div style="background-color: {% if message.tags == 'error' %}#fee{% else %}#efe{% endif %}; border: 1px solid {% if message.tags == 'error' %}#fcc{% else %}#cfc{% endif %}; padding: 10px; margin-bottom: 15px; border-radius: 5px; color: {% if message.tags == 'error' %}#c33{% else %}#3c3{% endif %};">
+          {{ message }}
+      </div>
+      {% endfor %}
+      {% endif %}
+
       <form class="auth-form" method="POST" action="{% url 'users:login' %}">
           {% csrf_token %}
           <div class="InputField">
               <label for="username">Username</label>
-              <input type="text" id="username" name="username" class="Input" required>
+              <input type="text" id="username" name="username" class="Input" required value="{{ form.username.value|default:'' }}">
           </div>
           <div class="InputField">
               <label for="password">Password</label>

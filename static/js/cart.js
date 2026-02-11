@@ -1,3 +1,4 @@
+
 // Функция для получения CSRF-токена
 function getCookie(name) {
     let cookieValue = null;
@@ -19,7 +20,56 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const csrftoken = getCookie('csrftoken');
 
-    // 1. Кнопка "Добавить в корзину" (Страница товара)
+    // 1. Quantity controls on product detail page (+ and - buttons)
+    const qtyInput = document.getElementById('product-quantity');
+    const qtyBtnPlus = document.querySelector('.qty-btn-plus');
+    const qtyBtnMinus = document.querySelector('.qty-btn-minus');
+
+    console.log('Quantity controls found:', {
+        input: qtyInput,
+        plusBtn: qtyBtnPlus,
+        minusBtn: qtyBtnMinus
+    });
+
+    if (qtyBtnPlus && qtyInput) {
+        console.log('Attaching plus button listener');
+        qtyBtnPlus.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Plus button clicked!');
+            const max = parseInt(qtyInput.max) || 999;
+            const currentValue = parseInt(qtyInput.value) || 1;
+            if (currentValue < max) {
+                qtyInput.value = currentValue + 1;
+                console.log('Increased to:', qtyInput.value);
+            } else {
+                console.log('Already at max:', max);
+            }
+        });
+    } else {
+        console.log('Plus button or input not found');
+    }
+
+    if (qtyBtnMinus && qtyInput) {
+        console.log('Attaching minus button listener');
+        qtyBtnMinus.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Minus button clicked!');
+            const min = parseInt(qtyInput.min) || 1;
+            const currentValue = parseInt(qtyInput.value) || 1;
+            if (currentValue > min) {
+                qtyInput.value = currentValue - 1;
+                console.log('Decreased to:', qtyInput.value);
+            } else {
+                console.log('Already at min:', min);
+            }
+        });
+    } else {
+        console.log('Minus button or input not found');
+    }
+
+    // 2. Кнопка "Добавить в корзину" (Страница товара)
     const addBtn = document.querySelector('.btn-add-to-cart');
     if (addBtn) {
         addBtn.addEventListener('click', function () {
@@ -42,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // 2. Управление в самой корзине (страница /cart/)
+    // 3. Управление в самой корзине (страница /cart/)
     const cartList = document.getElementById('cart-items-list');
     if (cartList) {
         cartList.addEventListener('click', function (e) {
@@ -80,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         .then(data => {
                             if (data.status === 'success') {
                                 // 1. Показываем уведомление
-                                alert(data.message);
+                                // alert(data.message);
 
                                 // 2. Находим счетчик в шапке
                                 let badge = document.getElementById('cart-badge');

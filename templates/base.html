@@ -27,7 +27,7 @@
         <!-- Link to your main CSS file -->
         <link rel="stylesheet" href="{% static 'css/main.css' %}" />
     </head>
-    <body>
+    <body{% if user.is_authenticated %} class="user-logged-in"{% endif %}>
         <header>
             <div class="header-container">
                 <a href="{% url 'home' %}" class="header__logo">
@@ -45,9 +45,9 @@
                                 >Guides & Recipes</a
                             >
                         </li>
-                        <li><a href="#">Community</a></li>
-                        <li><a href="#">Resources</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="{% url 'community' %}">Community</a></li>
+                        <li><a href="{% url 'resources' %}">Resources</a></li>
+                        <li><a href="{% url 'contact' %}">Contact</a></li>
                     </ul>
                 </nav>
 
@@ -112,6 +112,20 @@
                 {% endif %}
             </div>
         </header>
+
+        <!-- Messages -->
+{#        {% if messages %}#}
+{#        <div style="max-width: 1200px; margin: 20px auto; padding: 0 20px;">#}
+{#            {% for message in messages %}#}
+{#            <div style="padding: 15px; margin-bottom: 10px; border-radius: 5px;#}
+{#                        background-color: {% if message.tags == 'error' %}#fee{% elif message.tags == 'success' %}#d4edda{% else %}#d1ecf1{% endif %};#}
+{#                        border: 1px solid {% if message.tags == 'error' %}#fcc{% elif message.tags == 'success' %}#c3e6cb{% else %}#bee5eb{% endif %};#}
+{#                        color: {% if message.tags == 'error' %}#721c24{% elif message.tags == 'success' %}#155724{% else %}#0c5460{% endif %};">#}
+{#                {{ message }}#}
+{#            </div>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#        {% endif %}#}
 
         <!-- Main Content -->
         <main>{% block content %} {% endblock %}</main>

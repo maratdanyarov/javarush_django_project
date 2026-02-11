@@ -1,35 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // --- General logic for all pages (Login/Logout Simulation) ---
-    const loginForm = document.getElementById('login-form');
-    const logoutButton = document.getElementById('logout-button');
-
-    function checkLoginStatus() {
-        if (localStorage.getItem('isLoggedIn') === 'true') {
-            document.body.classList.add('user-logged-in');
-        } else {
-            document.body.classList.remove('user-logged-in');
-        }
-    }
-
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            localStorage.setItem('isLoggedIn', 'true');
-            const nextUrl = new URLSearchParams(window.location.search).get('next');
-            window.location.href = nextUrl || '/';
-        });
-    }
-
-    if (logoutButton) {
-        logoutButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            localStorage.removeItem('isLoggedIn');
-            window.location.href = '/';
-        });
-    }
-
-    checkLoginStatus();
+    // Authentication is now handled by Django backend
+    // No need for localStorage simulation
 
 
     // --- Logic for the Main Page (home.html) ---
@@ -44,18 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
-        // 2. Pagination Logic
-        const paginationList = document.querySelector('.pagination-list');
-        if (paginationList) {
-            const paginationLinks = paginationList.querySelectorAll('.pagination__link');
-            paginationLinks.forEach(link => {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    paginationLinks.forEach(lnk => lnk.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-        }
+        // 2. Pagination Logic - Removed to allow Django pagination to work
+        // The pagination is now handled by Django backend with proper page navigation
 
         // 3. Filter Logic (Keywords and Checkboxes)
         const keywordsList = document.querySelector('.keywords-list');
