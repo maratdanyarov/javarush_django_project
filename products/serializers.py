@@ -22,7 +22,12 @@ class ReviewSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     reviews = ReviewSerializer(many=True, read_only=True)
+    average_rating = serializers.FloatField(read_only=True)
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'slug', 'category', 'description', 'price', 'stock']
+        fields = [
+            'id', 'name', 'slug', 'category', 'description', 'price',
+            'stock', 'is_active', 'image', 'average_rating', 'reviews',
+            'created_at', 'updated_at'
+        ]

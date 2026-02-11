@@ -66,33 +66,86 @@ uv run python manage.py runserver
 ## Project Structure
 
 ```
-/
-├── config/                 # Django settings and URL configuration
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-├── products/               # Product catalog app
-│   ├── models.py           # Category, Product
-│   ├── views.py            # List, Detail views + API ViewSet
-│   └── serializers.py
-├── orders/                 # Orders and cart management
-│   ├── models.py           # Order, OrderItem
-│   ├── cart.py             # Session-based cart
-│   ├── views.py            # Cart, Checkout views + API
-│   └── services.py         # Email notifications
-├── users/                  # User authentication and profiles
-│   ├── models.py           # Custom User model
-│   ├── views.py            # Register, Profile views + API
-│   └── forms.py
-├── reviews/                # Product reviews
-│   ├── models.py           # Review model
-│   └── views.py            # Review creation
-├── templates/              # Django HTML templates
-├── static/                 # CSS, JavaScript, images
-├── tests/                  # Test files
-├── docker-compose.yml
-├── Dockerfile
-└── pyproject.toml
+javarush_django_project/
+├── config/                     # Django project configuration
+│   ├── __init__.py
+│   ├── settings.py             # Main settings
+│   ├── urls.py                 # Root URL configuration
+│   ├── wsgi.py                 # WSGI application
+│   └── asgi.py                 # ASGI application
+│
+├── products/                   # Product catalog app
+│   ├── migrations/
+│   ├── __init__.py
+│   ├── admin.py                # Admin customization
+│   ├── apps.py
+│   ├── models.py               # Category, Product models
+│   ├── views.py                # HomeView, ProductListView, ProductDetailView, ProductViewSet
+│   ├── serializers.py          # ProductSerializer, ReviewSerializer
+│   ├── urls.py                 # Product URLs
+│   └── tests.py
+│
+├── orders/                     # Order and cart management
+│   ├── migrations/
+│   ├── __init__.py
+│   ├── admin.py                # Order admin with analytics
+│   ├── apps.py
+│   ├── models.py               # Order, OrderItem models
+│   ├── cart.py                 # Session-based cart class
+│   ├── context_processor.py   # Cart context for templates
+│   ├── views.py                # Cart, Checkout, OrderViewSet
+│   ├── serializers.py          # OrderSerializer, CartAPIView
+│   ├── services.py             # Email notification services
+│   ├── forms.py                # Checkout form
+│   ├── urls.py                 # Order URLs
+│   └── tests.py
+│
+├── users/                      # User authentication and profiles
+│   ├── migrations/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py               # Custom User model
+│   ├── views.py                # RegisterView, ProfileView, PasswordChangeView
+│   ├── serializers.py          # UserSerializer, UserRegistrationSerializer
+│   ├── forms.py                # RegisterForm, ProfileUpdateForm
+│   ├── urls.py                 # User URLs
+│   └── tests.py
+│
+├── reviews/                    # Product reviews
+│   ├── migrations/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py               # Review model
+│   ├── views.py                # ReviewCreateView
+│   ├── forms.py                # ReviewForm
+│   ├── urls.py                 # Review URLs
+│   └── tests.py
+│
+├── templates/                  # HTML templates
+├── static/                     # Static files
+│   ├── css/
+│   │   └── main.css            # Main stylesheet
+│   ├── js/
+│   │   ├── main.js             # Main JavaScript
+│   │   └── cart.js             # Cart functionality
+│   └── img/                    # Images
+│       ├── products/           # Product images
+│       ├── background/         # Background images
+│       ├── icons/              # UI icons
+│       └── avatars/            # User avatars
+│
+├── manage.py                   # Django management script
+├── pyproject.toml              # UV project configuration
+├── uv.lock                     # UV lock file
+├── setup.cfg                   # Linting configuration
+├── pyrightconfig.json          # Type checking configuration
+├── Dockerfile                  # Docker image definition
+├── docker-compose.yml          # Docker Compose configuration
+├── .env.example                # Environment variables template
+├── .gitignore                  # Git ignore rules
+└── README.md                   # This file
 ```
 
 ## API Endpoints
@@ -194,23 +247,6 @@ uv run mypy .
 | `EMAIL_HOST` | SMTP host | `smtp.gmail.com` |
 | `EMAIL_PORT` | SMTP port | `587` |
 
-## Implementation Checklist
-
-- [x] Docker Compose setup with PostgreSQL
-- [x] Product catalog with filtering, search, pagination
-- [x] Product sorting (price, popularity, newness)
-- [x] Product detail page with reviews
-- [x] Shopping cart (session-based, AJAX)
-- [x] Order checkout with validation
-- [x] Email notifications on order
-- [x] User registration and authentication
-- [x] User profile and password change
-- [x] Order history
-- [x] Admin panel with analytics
-- [x] REST API with JWT authentication
-- [x] API documentation (Swagger/OpenAPI)
-- [x] Tests (pytest-django)
-- [x] Linting configuration (flake8, mypy)
 
 ## Admin Features
 

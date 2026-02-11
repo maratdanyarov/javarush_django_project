@@ -24,6 +24,7 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at", "total_price")
     list_editable = ("status",)
     date_hierarchy = "created_at"
+    change_list_template = "admin/order/order_changelist.html"
     actions = [
         "mark_as_paid",
         "mark_as_shipped",
@@ -83,7 +84,7 @@ class OrderAdmin(admin.ModelAdmin):
             "top_products": top_products,
             "recent_orders": recent_orders,
         }
-        return TemplateResponse(request, "admin/orders/analytics.html", context)
+        return TemplateResponse(request, "admin/order/analytics.html", context)
 
     @admin.action(description="Mark selected orders as Paid")
     def mark_as_paid(self, request, queryset):

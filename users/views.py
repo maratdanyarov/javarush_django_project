@@ -41,6 +41,10 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         )
         context["profile_form"] = ProfileUpdateForm(instance=self.request.user)
         context["password_form"] = PasswordChangeForm(self.request.user)
+
+        # Check if we should show password tab
+        context["show_password_tab"] = self.request.session.pop('show_password_tab', False)
+
         return context
 
 
@@ -65,11 +69,17 @@ class PasswordChangeView(LoginRequiredMixin, View):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            messages.success(request, "Password updated successfully")
+            messages.success(request, "Password changed successfully!")
+            return redirect("users:profile")
         else:
-            for error in form.errors.values():
-                messages.error(request, error)
-        return redirect("users:profile")
+            # Store form errors to display in template
+            for field, errors in form.errors.items():
+                field_name = field.replace('_', ' ').title()
+                for error in errors:
+                    messages.error(request, f"{field_name}: {error}")
+            # Store in session that we should show password tab
+            request.session['show_password_tab'] = True
+            return redirect("users:profile")
 
 
 @require_POST
