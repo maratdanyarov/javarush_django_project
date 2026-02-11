@@ -125,7 +125,7 @@
             <p class="review-notice">You can only review products you have purchased.</p>
         {% endif %}
     {% else %}
-        <p class="review-notice"><a href="{% url 'login' %}">Log in</a> to leave a review.</p>
+        <p class="review-notice"><a href="{% url 'users:login' %}">Log in</a> to leave a review.</p>
     {% endif %}
 
     <!-- Reviews List -->

@@ -71,6 +71,7 @@ class Cart:
 
     def clear(self) -> None:
         del self.session[settings.CART_SESSION_ID]
+        self.cart = {}
         self.save()
 
     def __iter__(self):

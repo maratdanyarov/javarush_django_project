@@ -238,6 +238,8 @@ class OrderViewSet(viewsets.ModelViewSet):
 class CartAPIView(APIView):
     """API endpoint for cart management."""
 
+    permission_classes = [permissions.AllowAny]
+
     def get(self, request):
         """Get cart contents."""
         cart = Cart(request)
